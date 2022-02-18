@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace Moedas
@@ -18,16 +19,14 @@ namespace Moedas
             }
 
             var rubloRusso = await _apiConveter.Api<Moeda>("BRL-RUB");
-            //var resultRubloRusso = float.Parse(rubloRusso.high) * valorReais;
 
             var dolar = await _apiConveter.Api<Moeda>("RUB-USD");
-            //var resultDolar = float.Parse(dolar.high) * resultRubloRusso;
 
-            var resultReaisEmDolar = float.Parse(rubloRusso.BRLRUB.high) * float.Parse(dolar.RUBUSD.high) * valorReais;
+            var resultReaisEmDolar = float.Parse(rubloRusso.BRLRUB.high.Replace(".", ",")) * float.Parse(dolar.RUBUSD.high.Replace(".", ",")) * valorReais;
 
-            Console.WriteLine(resultReaisEmDolar);
+            Console.WriteLine("Nossa conversao: R$" + resultReaisEmDolar.ToString("F2", CultureInfo.InvariantCulture));
             var testConfirmationResult = await _apiConveter.Api<Moeda>("BRL-USD");
-            Console.WriteLine(float.Parse(testConfirmationResult.BRLUSD.high) * valorReais);
+            Console.WriteLine("Conversao de validacao: R$" + (float.Parse(testConfirmationResult.BRLUSD.high.Replace(".", ",")) * valorReais).ToString("F2", CultureInfo.InvariantCulture));
         }
     }
 }
